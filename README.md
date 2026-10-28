@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SHARAN website
 
-## Getting Started
+Website for **SHARAN – Shabelle Resilience & Action Network**, built with Next.js (App Router) and Tailwind CSS v4.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build && npm start   # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Home · About · Programs · Where we work · Impact & strategy · News (+ article pages) · Get involved (partner, donate, volunteer, careers) · Accountability (CHS, safeguarding, feedback form) · Contact
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Editing content
 
-## Learn More
+- `src/lib/site.ts` – email, phone, address, social links (**placeholders marked `confirm` must be updated before launch**)
+- `src/lib/content.ts` – pillars, values, governance, regions, strategy (from the 2026 Organisational Profile)
+- `src/lib/news.ts` – news articles
+- Brand colours live in `src/app/globals.css` (`@theme`)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Forms (contact, donate, feedback, newsletter) currently open the visitor's email app with a prefilled message, because there is no backend yet. Replace `sendViaEmail` in `src/components/Forms.tsx` with an API/form service when ready.
