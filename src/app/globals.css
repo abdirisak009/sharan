@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* SHARAN brand palette (Organisational Profile 2026) */
+  --color-river: #2373be; /* Shabelle Blue: main brand colour */
+  --color-river-50: #eef5fc;
+  --color-river-100: #d6e7f7;
+  --color-river-200: #aecfee;
+  --color-river-300: #7bb1e2;
+  --color-river-400: #4890d1;
+  --color-river-600: #1c5f9f;
+  --color-river-700: #174d81;
+  --color-deep: #14365c; /* Deep River: wordmark and headings */
+  --color-deep-800: #10294a;
+  --color-deep-900: #0b1d35;
+  --color-deep-950: #071326;
+  --color-sunrise: #f2a33a; /* Sunrise: accent only */
+  --color-sunrise-50: #fef6ea;
+  --color-sunrise-100: #fde8c8;
+  --color-sunrise-600: #d9871c;
+  --color-growth: #2e9c4f; /* Growth Green: accent only */
+  --color-growth-50: #edf8f0;
+  --color-growth-100: #d3eedb;
+  --color-growth-600: #237d3e;
+  --color-sand: #faf7f2;
+  --color-ink: #1d2939;
+  --color-muted: #5b6b7f;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-wave: wave 14s linear infinite;
+  --animate-wave-slow: wave 22s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-dash: dash 3s linear infinite;
+  --animate-rise: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes wave {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes dash {
+    to { stroke-dashoffset: -32; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  color: var(--color-deep);
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--color-sunrise);
+  color: var(--color-deep-950);
+}
+
+/* Scroll reveal (see components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgba(35, 115, 190, 0.18) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.bg-dots-light {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.brand-rule {
+  background: linear-gradient(90deg, var(--color-river) 0 66%, var(--color-sunrise) 66% 86%, var(--color-growth) 86% 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
