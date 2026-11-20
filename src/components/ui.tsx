@@ -1,14 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getContent } from "@/lib/content";
+import { photos, type Photo } from "@/lib/photos";
 import {
   Accessibility, ArrowRight, Baby, CloudRain, GraduationCap, Handshake, HeartHandshake, Landmark, Leaf,
-  Lightbulb, Megaphone, Scale, Search, ShieldCheck, Sparkles, Stethoscope, Tent, Users, Waves, Wheat,
+  Lightbulb, Megaphone, Scale, Search, ShieldCheck, Sparkles, Stethoscope, Store, Tent, Users, Waves, Wheat,
   type LucideIcon,
 } from "lucide-react";
 
 const icons: Record<string, LucideIcon> = {
   Accessibility, Baby, CloudRain, GraduationCap, Handshake, HeartHandshake, Landmark, Leaf, Lightbulb,
-  Megaphone, Scale, Search, ShieldCheck, Sparkles, Stethoscope, Tent, Users, Waves, Wheat,
+  Megaphone, Scale, Search, ShieldCheck, Sparkles, Stethoscope, Store, Tent, Users, Waves, Wheat,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
@@ -22,6 +25,49 @@ export const accent = {
   growth: { bg: "bg-growth", soft: "bg-growth-50", text: "text-growth", ring: "ring-growth-100", border: "border-growth" },
   deep: { bg: "bg-deep", soft: "bg-river-50", text: "text-deep", ring: "ring-river-100", border: "border-deep" },
 } as const;
+
+/** A photo that fills its (positioned, sized) parent, with an optional place caption and credit. */
+export function PhotoFrame({
+  photo,
+  className = "",
+  sizes = "(min-width: 1024px) 50vw, 100vw",
+  preload = false,
+  caption = true,
+}: {
+  photo: Photo;
+  className?: string;
+  sizes?: string;
+  preload?: boolean;
+  caption?: boolean;
+}) {
+  return (
+    <figure className={`relative overflow-hidden bg-deep ${className}`}>
+      <Image
+        src={photo.src}
+        alt={photo.alt}
+        fill
+        sizes={sizes}
+        placeholder="blur"
+        preload={preload}
+        className="scroll-zoom object-cover"
+      />
+      {caption && <PhotoCredit photo={photo} className="absolute bottom-3 left-3 right-3" />}
+    </figure>
+  );
+}
+
+export function PhotoCredit({ photo, className = "" }: { photo: Photo; className?: string }) {
+  return (
+    <figcaption
+      className={`pointer-events-auto w-fit max-w-full rounded-full bg-deep-950/55 px-3 py-1 text-[0.7rem] leading-snug text-white/85 backdrop-blur ${className}`}
+    >
+      {photo.place} ·{" "}
+      <a href={photo.source} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">
+        Photo: {photo.credit} ({photo.license})
+      </a>
+    </figcaption>
+  );
+}
 
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>;
@@ -119,22 +165,38 @@ export function PageHero({
   eyebrow,
   title,
   intro,
+  photo,
   children,
 }: {
   eyebrow: string;
   title: ReactNode;
   intro?: ReactNode;
+  photo?: Photo;
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden bg-deep pb-32 pt-40 text-white sm:pt-44">
-      <div className="bg-dots-light absolute inset-0" aria-hidden="true" />
-      <div
-        className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-sunrise/25 blur-3xl"
-        aria-hidden="true"
-      />
-      <div className="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full bg-river/40 blur-3xl" aria-hidden="true" />
-      <Container className="relative">
+    <section className="relative overflow-hidden bg-deep pb-32 pt-40 text-white sm:pt-44 lg:pb-40 lg:pt-52">
+      {photo ? (
+        <>
+          <Image src={photo.src} alt="" fill preload sizes="100vw" placeholder="blur" className="hero-parallax object-cover" />
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-deep-950/95 via-deep/80 to-deep/30"
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-deep-950/70 via-transparent to-transparent" aria-hidden="true" />
+          <PhotoCredit photo={photo} className="absolute bottom-28 right-4 z-10 hidden sm:block lg:right-8" />
+        </>
+      ) : (
+        <>
+          <div className="bg-dots-light absolute inset-0" aria-hidden="true" />
+          <div
+            className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-sunrise/25 blur-3xl"
+            aria-hidden="true"
+          />
+          <div className="absolute -left-40 bottom-0 h-[24rem] w-[24rem] rounded-full bg-river/40 blur-3xl" aria-hidden="true" />
+        </>
+      )}
+      <Container className="hero-fade relative">
         <div className="max-w-3xl animate-rise">
           <Eyebrow light>{eyebrow}</Eyebrow>
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] !text-white sm:text-5xl lg:text-6xl">{title}</h1>
@@ -147,23 +209,22 @@ export function PageHero({
   );
 }
 
-export function CtaBand() {
+export async function CtaBand() {
+  const cta = await getContent("cta");
   return (
     <section className="relative overflow-hidden py-24">
       <Container>
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-river via-river-700 to-deep px-6 py-16 text-white sm:px-14 lg:py-20">
-          <div className="bg-dots-light absolute inset-0" aria-hidden="true" />
-          <div className="absolute -right-20 -top-24 h-80 w-80 rounded-full bg-sunrise/40 blur-3xl" aria-hidden="true" />
-          <div className="absolute -bottom-24 left-1/3 h-72 w-72 rounded-full bg-growth/40 blur-3xl" aria-hidden="true" />
+        <div className="relative overflow-hidden rounded-[2rem] bg-deep px-6 py-16 text-white sm:px-14 lg:py-24">
+          <Image src={photos.farmAfgoi.src} alt="" fill sizes="(min-width: 1280px) 1216px, 100vw" placeholder="blur" className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-deep-950/95 via-river-700/85 to-river/40" aria-hidden="true" />
+          <div className="absolute -right-20 -top-24 h-80 w-80 rounded-full bg-sunrise/30 blur-3xl" aria-hidden="true" />
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]">
             <div>
-              <Eyebrow light>Partner with SHARAN</Eyebrow>
+              <Eyebrow light>{cta.eyebrow}</Eyebrow>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight !text-white sm:text-4xl">
-                Invest in communities that are ready to lead their own resilience.
+                {cta.title}
               </h2>
-              <p className="mt-5 max-w-xl text-lg text-river-100">
-                We welcome partners who value local ownership, accountability and lasting results.
-              </p>
+              <p className="mt-5 max-w-xl text-lg text-river-100">{cta.text}</p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
               <ButtonLink href="/get-involved" variant="accent">

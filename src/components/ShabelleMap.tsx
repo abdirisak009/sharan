@@ -13,6 +13,9 @@ const places = [
   { name: "Marka", x: 280, y: 388, phase: 2 },
 ];
 
+// Labels drawn to the left of their dot so they do not collide with neighbours.
+const labelLeft = new Set(["Jowhar", "Afgooye", "Qoryooley"]);
+
 const phaseColor = { 1: "#2373BE", 2: "#2E9C4F", 3: "#F2A33A" } as const;
 
 export function ShabelleMap({ className = "" }: { className?: string }) {
@@ -84,7 +87,7 @@ export function ShabelleMap({ className = "" }: { className?: string }) {
         className="animate-dash"
       />
       <text fill="#1c5f9f" fontSize="15" fontWeight="700" fontFamily="var(--font-display)" letterSpacing="3">
-        <textPath href="#shabelle" startOffset="61%">
+        <textPath href="#shabelle" startOffset="72%">
           SHABELLE RIVER
         </textPath>
       </text>
@@ -93,7 +96,7 @@ export function ShabelleMap({ className = "" }: { className?: string }) {
       {[
         { t: "HIRAAN", x: 230, y: 120 },
         { t: "MIDDLE SHABELLE", x: 395, y: 215 },
-        { t: "LOWER SHABELLE", x: 120, y: 360 },
+        { t: "LOWER SHABELLE", x: 40, y: 320 },
         { t: "BANADIR", x: 365, y: 375 },
       ].map((r) => (
         <text
@@ -128,9 +131,9 @@ export function ShabelleMap({ className = "" }: { className?: string }) {
             strokeWidth="3"
           />
           <text
-            x={p.x + (p.name === "Qoryooley" || p.name === "Afgooye" ? -12 : 14)}
+            x={p.x + (labelLeft.has(p.name) ? -14 : 14)}
             y={p.y + 5}
-            textAnchor={p.name === "Qoryooley" || p.name === "Afgooye" ? "end" : "start"}
+            textAnchor={labelLeft.has(p.name) ? "end" : "start"}
             fill="#14365C"
             fontSize={p.hq ? 17 : 13}
             fontWeight={p.hq ? 800 : 600}

@@ -1,0 +1,16 @@
+# HTTPS for the SHARAN website. Caddy gets and renews the Let's Encrypt
+# certificates automatically. SITE_DOMAIN and SERVER_IP come from deploy/.env.
+
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:3000
+}
+
+www.{$SITE_DOMAIN} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+# Visiting the bare IP address goes to the domain.
+http://{$SERVER_IP} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
