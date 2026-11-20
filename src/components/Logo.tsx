@@ -23,10 +23,10 @@ export function LogoMark({ className = "h-11 w-11" }: { className?: string }) {
   );
 }
 
-export function Logo({ variant = "dark" }: { variant?: "dark" | "light" }) {
+export function Logo({ variant = "dark", onClick }: { variant?: "dark" | "light"; onClick?: () => void }) {
   const light = variant === "light";
   return (
-    <Link href="/" className="group flex items-center gap-3" aria-label="SHARAN home">
+    <Link href="/" onClick={onClick} className="group flex items-center gap-3" aria-label="SHARAN home">
       <LogoMark className="h-11 w-11 shrink-0 transition-transform duration-500 group-hover:rotate-[8deg]" />
       <span className="flex flex-col leading-none">
         <span

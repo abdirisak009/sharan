@@ -74,15 +74,73 @@ h1, h2, h3, h4, h5 {
   color: var(--color-deep-950);
 }
 
-/* Scroll reveal (see components/Reveal.tsx) */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+/* Scroll-driven animations (CSS only). Browsers without support, and visitors
+   who prefer reduced motion, see everything immediately without animation. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Sections rise into view (components/Reveal.tsx). */
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry var(--reveal-delay, 0%) entry calc(65% + var(--reveal-delay, 0%));
+    }
+
+    /* Photos settle from a slight zoom as they scroll in. */
+    .scroll-zoom {
+      animation: scroll-zoom linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+
+    /* Hero backgrounds drift slower than the page. */
+    .hero-parallax {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    /* Hero text drifts up and fades as the page scrolls away from it. */
+    .hero-fade {
+      animation: hero-fade linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 70vh;
+    }
+
+    /* Reading progress bar at the top of the page (components/SiteChrome.tsx). */
+    .scroll-progress {
+      display: block;
+      animation: scroll-progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
 }
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
+
+/* Slow drift on the admin login photo. */
+@media (prefers-reduced-motion: no-preference) {
+  .login-pan { animation: login-pan 30s ease-in-out infinite alternate; }
+}
+@keyframes login-pan {
+  from { transform: scale(1.08) translate(0, 0); }
+  to { transform: scale(1.16) translate(-2%, -2%); }
+}
+
+@keyframes reveal-rise {
+  from { opacity: 0; transform: translateY(48px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes scroll-zoom {
+  from { transform: scale(1.18); }
+  to { transform: scale(1); }
+}
+@keyframes hero-parallax {
+  to { transform: translateY(22%) scale(1.06); }
+}
+@keyframes hero-fade {
+  to { opacity: 0; transform: translateY(-70px); filter: blur(2px); }
+}
+@keyframes scroll-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 .bg-dots {
@@ -100,6 +158,5 @@ h1, h2, h3, h4, h5 {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }

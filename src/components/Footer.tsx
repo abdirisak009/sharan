@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 import { Container } from "./ui";
 import { NewsletterForm } from "./Forms";
 import { site } from "@/lib/site";
-import { pillars } from "@/lib/content";
+import { getContent } from "@/lib/content";
 
 const social = [
   {
@@ -24,7 +24,8 @@ const social = [
   },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const pillars = await getContent("pillars");
   return (
     <footer className="relative overflow-hidden bg-deep-950 text-river-100">
       <div className="brand-rule h-1.5 w-full" />
@@ -62,6 +63,7 @@ export function Footer() {
               <ul className="mt-5 space-y-3 text-sm">
                 {[
                   ["/about", "About us"],
+                  ["/projects", "Projects"],
                   ["/where-we-work", "Where we work"],
                   ["/impact", "Impact & strategy"],
                   ["/accountability", "Accountability"],

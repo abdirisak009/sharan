@@ -1,7 +1,9 @@
+import { SiteChrome } from "@/components/SiteChrome";
 import { ButtonLink, Container, RiverWaves } from "@/components/ui";
 
 export default function NotFound() {
   return (
+    <SiteChrome>
     <section className="relative overflow-hidden bg-deep pb-40 pt-44 text-white">
       <div className="bg-dots-light absolute inset-0" aria-hidden="true" />
       <Container className="relative text-center">
@@ -16,5 +18,6 @@ export default function NotFound() {
       </Container>
       <RiverWaves />
     </section>
+    </SiteChrome>
   );
 }
