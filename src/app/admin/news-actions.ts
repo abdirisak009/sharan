@@ -78,7 +78,7 @@ export async function savePost(id: number | null, _: FormState, data: FormData):
       return { error: error instanceof Error ? error.message : "The photo could not be uploaded." };
     }
   }
-  const validImage = image in photos || (image.startsWith("media/") && isMediaFile(image.slice(6)));
+  const validImage = Object.hasOwn(photos, image) || (image.startsWith("media/") && isMediaFile(image.slice(6)));
   if (!validImage) return { error: "Choose a photo." };
 
   const values = [slug, title, excerpt, body, categoryId, image, published, date, user.id];
