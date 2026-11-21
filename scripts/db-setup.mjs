@@ -1,9 +1,18 @@
 // Creates the database tables and the first admin account.
 // Usage: npm run db:setup   (reads DATABASE_URL and ADMIN_* from .env.local)
+// Needs Node 22.18+ to run the shared .ts files directly (the Docker image uses Node 24).
 import { readFileSync, existsSync } from "node:fs";
 import pg from "pg";
-import { hashPassword, MIN_PASSWORD_LENGTH } from "../src/lib/auth/password.ts";
-import { defaultCategories, defaultPosts } from "../src/lib/news/defaults.ts";
+
+const [major, minor] = process.versions.node.split(".").map(Number);
+if (major < 22 || (major === 22 && minor < 18)) {
+  console.error(`db:setup needs Node 22.18 or newer (this is Node ${process.versions.node}).`);
+  console.error("With nvm: run `nvm use` in this folder (it reads .nvmrc), then try again.");
+  process.exit(1);
+}
+// Loaded after the version check: older Node versions cannot run .ts files.
+const { hashPassword, MIN_PASSWORD_LENGTH } = await import("../src/lib/auth/password.ts");
+const { defaultCategories, defaultPosts } = await import("../src/lib/news/defaults.ts");
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 

@@ -1,7 +1,9 @@
+# Build context is the repository root.
 node_modules
 .next
 .git
 .env*
 !.env.example
 deploy/.env
+deploy/backups
 *.tsbuildinfo
