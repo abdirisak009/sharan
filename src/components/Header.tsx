@@ -134,6 +134,7 @@ export function Header() {
             href="/get-involved"
             onClick={close}
             aria-label="Get involved"
+            title="Get involved"
             className="group hidden items-center gap-2 whitespace-nowrap rounded-full bg-sunrise px-5 py-2.5 text-sm font-bold text-deep-950 shadow-[0_8px_20px_-8px_rgba(242,163,58,0.9)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-8px_rgba(242,163,58,1)] sm:inline-flex xl:px-3 2xl:px-5"
           >
             <Heart className="h-4 w-4 transition group-hover:scale-125 group-hover:fill-deep-950" />
