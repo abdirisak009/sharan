@@ -54,6 +54,21 @@ The website container runs the database setup on every start. Once you can sign 
 
 **Backups:** the `backup` service writes a database dump and a photo archive to `deploy/backups/` every 24 hours and keeps 14 days. They are on the same disk as the live data, so copy them off the server regularly. Restore steps are in `deploy/backup.sh`.
 
+## Deploying from your computer
+
+The live site runs on the server in `/opt/sharan` (Docker Compose: website, PostgreSQL, MinIO and Caddy for HTTPS).
+Deployers log in as the `deploy` user with an SSH key; ask the site owner for one.
+
+```bash
+# Save the private key as ~/.ssh/sharan_deploy (chmod 600), then from the project folder:
+./deploy/deploy.sh
+# or with the key somewhere else:
+SSH_KEY=/path/to/sharan_deploy ./deploy/deploy.sh
+```
+
+The script uploads the code, keeps the server's `deploy/.env` (passwords) and `deploy/backups/`, rebuilds the containers and checks the site is
+up. The database, uploaded photos and HTTPS certificates live in Docker volumes and are not affected.
+
 ## Pages
 
 Home · About · Programs · Projects · Where we work · Impact & strategy · News (categories + article pages) · Get involved (partner, donate, volunteer, careers) · Accountability (CHS, safeguarding, feedback form) · Contact
